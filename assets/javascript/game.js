@@ -1,45 +1,109 @@
-var Game = function(){
+
+function play(){
+
+	//FOR TESTING ONLY
+	console.log("Starting game...");
+	console.log("Creating Game object");
+	//var newGame = new Game();
+	//console.log("Creating characters");
+	//console.log("Adding to pool...");
+	//console.log("Ready");
+
+	//Create two test characters
+	var char1 = new Character("char1");
+	var char2 = new Character("char2");
+
+
+	//TEST BATTLE FUNCTION 
+	char1.attack(char2);
+	console.log(char1.characterName + " has " + char1.currentHealthPoints + " health remaining");
+	console.log(char2.characterName + " has "  + char2.currentHealthPoints +  " health remaining");
+}
+
+const Game = function(){
 
 	this.characterPool = [];
 	this.playerCharacter = "NONE";
 	this.round = 1;
 
-
-
-addCharacter = function(Character){
+	addCharacter = function(Character){
 
 	this.characterPool.push(Character);
 
-}
+	}
 	
 
 };
 
 
-var Character = function(characterName,healthPoints,baseAttackPower,
-					currentAttackPower,counterAttackPower){
+const Character = function(characterName,baseHealthPoints,baseAttackPower,
+					counterAttackPower){
+		//--------------CHARACTER ATTRIBUTES-------------------------------------------------------
 		this.characterName = characterName;
-		this.healthPoints = healthPoints;
+		this.baseHealthPoints = baseHealthPoints 
+		this.currentHealthPoints = 100;//this.baseHealthPoints;
+
 		this.baseAttackPower = baseAttackPower;
-		this.currentAttackPower = currentAttackPower;
-		this.counterAttackPower = counterAttackPower;
+		this.currentAttackPower = 5;//this.baseAttackPower;
+		this.counterAttackPower = 10;//counterAttackPower;
+
 		this.isAttacker = false;
+		//---------------------CHARACTER FUNCTIONS---------------------------------------------------
+		//attack and pass in defender object 
+		//inner functions pass in references rather than value
+		//character attacks
+		//defender defends (damage calculation)
+		//defender counterAttacks (attacker takes damage from defender)
+		//attacker defends (damage calculation);
+
+
 
 		this.attack = function(defendingCharacter){
 
-			console.log("You attack: " + defendingCharacter.characterName);
+			console.log( this.characterName + " attacks " + defendingCharacter.characterName);
+			defendingCharacter.defend(this); //enemy defends - takes damage
+			defendingCharacter.counterAttack(this); //enemy counter attacks 
+			this.defend(defendingCharacter); //original attacker character takes damage
+
+
+		};
+		
+		//Take Damage and check if DEAD
+		this.defend = function(attackingCharacter){
+
+			//TODO
+			//check if defender was original attacker
+			//If defender is original attacker, they should take counterAttack damage
+			//If defender is not original attacker they should take currentAttackPower damage
+
+			
+			this.currentHealthPoints -= attackingCharacter.currentAttackPower;
+			console.log(this.characterName + " takes " + attackingCharacter.currentAttackPower + " points of damage");
+
+			if(this.currentHealthPoints === 0){
+				console.log(this.characterName + " has DIED");
+			}
+
+		};
+		//Attack the original attacker (character who called the "attack" function)
+
+		this.counterAttack = function(attackingCharacter){
+			//TODO
+			//the counterAttack function should not directly change the health value of the target (original attacker)
+			//See TODO on the Defend function
+			attackingCharacter.currentHealthPoints -= this.currentAttackPower;
+			console.log(this.characterName + " counter-attacks for " + this.currentAttackPower + " points of damage");
+
 		};
 
-		this.defend = function(attackingCharacter){
-			console.log("You defend yourself from: " + attackingCharacter);
-		};
+	
 
 
 
 
 	};
 
-
+/*
 var newGame = new Game();
 
 console.log("GAME: " );
@@ -50,3 +114,4 @@ var char2 = new Character("Char 2");
 char1.attack(char2);
 char2.attack(char1);
 
+*/
