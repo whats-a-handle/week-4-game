@@ -28,7 +28,12 @@ label{
 	visibility: visible;
 }
 
+.play-button{
+	width:100%;
+	height:50px;
+	font-size: 25px;
 
+}
 
 .page-header{
 	height:100%;
