@@ -1,6 +1,12 @@
-body{
-	background: #57b4cc;
+
+html, body { 
+  background: url(../images/background1.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
+
 
 body, p{	
 	font-family:'Arial', 'Helvetica Neue', Helvetica, sans-serif;
@@ -18,6 +24,7 @@ label{
 		font-weight: normal;
 	}
 
+
 .main-content{
 	margin-top:75px;
 	
@@ -29,6 +36,7 @@ label{
 }
 
 .play-button{
+	visibility: hidden;
 	width:100%;
 	height:50px;
 	font-size: 25px;
@@ -36,21 +44,23 @@ label{
 }
 
 .page-header{
+	background-image: linear-gradient(to top,#ffffff26 0,#3129008a 100%);
 	height:100%;
 	color:white;
 	padding-top:5px;
 	margin-top:0;
 }
 .footer{	
-	background-image: linear-gradient(to bottom,#fff 0,#e0e0e0 100%);
+	background-image: linear-gradient(to bottom,#ffffff26 0,#0000007d 100%);
 	position:fixed;
 	bottom:0;
 	text-align:center;
-	height:50px;
+	height:40px;
 	width:100%;
 	padding-bottom:60px;
 	
 }
 .footer>.text-center>h3{
-	color:#57b4cc;
+	color:white;
 }
+
