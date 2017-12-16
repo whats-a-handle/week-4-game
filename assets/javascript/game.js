@@ -1,8 +1,11 @@
 const Game = function(){
 
-	this.playerCharacter = "NONE";
+	this.playerCharacterName = "NONE";
+	this.playerSelected = false;
+	this.enemySelected = false;
+	this.enemyName = "NONE";
 	this.round = 1;
-	this.characterMap = {};
+	this.characterMap = {}; // will be used for characterName : characterObj  "key-value" pairs for jQuery onClick return values
 	this.poolElements = {
 
 		neutral : $(".neutral.character-container"),
@@ -11,7 +14,25 @@ const Game = function(){
 
 	} ;
 	
-	
+	this.setPlayerName = function(characterName){
+		this.playerSelected = true;
+		this.playerCharacterName = characterName;
+	}
+
+	this.getPlayerName = function(){
+
+		return this.playerCharacterName;
+	}
+
+	this.setEnemyName = function(enemyName){
+		this.enemySelected = true;
+		this.enemyName = enemyName;
+	}
+
+	this.getEnemyName = function(){
+		return this.enemyName;
+	}
+
 	this.addCharacter = function(characterObj){
 
 		this.characterMap[characterObj.characterName] = characterObj;
@@ -25,9 +46,9 @@ const Game = function(){
 		}
 	};
 
-	this.updateCharacterPoolElement = function(avatar,pool){
+	this.updateCharacterPoolElement = function(characterName,pool){
 
-			this.poolElements[pool].append(avatar.avatarElement);		
+			this.poolElements[pool].append(this.characterMap[characterName].avatarElement);		
 	};
 
 	this.regeneratePoolElements = function(avatarList,pool){
@@ -159,9 +180,20 @@ $( document ).ready(function(){
 
 	$(".character-avatar.img-fluid").click(function(){
 
+
+		if(!newGame.playerSelected)
+		{
+		console.log("Player has chosen a character from our character map!" + $(this).attr("value"));
+		newGame.setPlayerName($(this).attr("value"));
+		newGame.updateCharacterPoolElement(newGame.getPlayerName(), "attacker");
+
+		}
+		else if(!newGame.enemySelected){
+			console.log("Player has chosen an enemy character from our character map!");
+			newGame.setEnemyName($(this).attr("value"));
+			newGame.updateCharacterPoolElement(newGame.getEnemyName(), "defender");
+		}
 		
-		console.log("You've chosen a character from our character map!");
-		console.log(newGame.characterMap[$(this).attr("value")]);
 
 
 	});
