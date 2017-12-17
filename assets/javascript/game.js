@@ -161,13 +161,6 @@ const Character = function(characterName,baseHealthPoints,baseAttackPower,
 		};
 	};
 ///////////////////////////////////////////////////////////////////////////
-//"global function" to get things started when player clicks the play button
- function startNewGame(){
-
- 	var newGame = new Game();
-
- 	return newGame
- };
 ///////////////////////////////////////////////////////////////////////////
 
 $( document ).ready(function(){
