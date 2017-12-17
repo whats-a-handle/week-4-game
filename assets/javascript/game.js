@@ -86,7 +86,7 @@ const Game = function(){
 	this.regeneratePoolElements(characterList, "neutral");//add avatars to the character pool/selection container
 	};
 //-----------------------------------------------------------------------
-	//When constructor is called, initialize the object's values
+//When constructor is called, initialize the object's values
 	this.initialize();
 
 
@@ -166,11 +166,11 @@ const Character = function(characterName,baseHealthPoints,baseAttackPower,
 $( document ).ready(function(){
 	
 	
-	var newGame = new Game();
+	const newGame = new Game();
 
 
 	$(document).on('click', '.character-avatar.img-fluid', function(){
-		let clickValue = $(this).attr("value");
+		const clickValue = $(this).attr("value");
 		if(!newGame.playerSelected){		
 			newGame.setPlayerName(clickValue);
 			newGame.updateCharacterPoolElement(newGame.getPlayerName(), "attacker");
@@ -184,7 +184,7 @@ $( document ).ready(function(){
 
 	$(document).on('click', '.btn.btn-default', function(){
 	
-		let clickValue = $(this).attr("value");
+		const clickValue = $(this).attr("value");
 		if(newGame.playerSelected && newGame.enemySelected && clickValue === "attack"){
 		
 			newGame.fight(newGame.characterMap[newGame.playerCharacterName], newGame.characterMap[newGame.enemyName]);	
