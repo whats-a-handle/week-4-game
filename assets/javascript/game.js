@@ -1,6 +1,12 @@
 const Game = function(){
 
 	
+	this.updateHeaderText = function(textValue){
+
+		$(".page-header.text-center>h1").text(textValue);
+
+
+	};
 	
 	this.mapCharacterContainers = function(){
 		this.characterContainerElements = {
@@ -43,6 +49,12 @@ const Game = function(){
 			this.characterContainerElements[pool].append(this.characterMap[characterName].avatarElement);		
 	};
 
+	this.emptyCharacterContainer = function(container){
+
+		this.characterContainerElements[container].empty();
+
+
+	}
 	this.emptyCharacterContainers = function(){
 
 		
@@ -61,11 +73,63 @@ const Game = function(){
 
 	}
 
-	this.fight = function(attacker,defender){
+	this.winGame = function(characterObj){
 
-		attacker.attack(defender);
+		console.log(characterObj.characterName + " has won the game!");
+		this.updateHeaderText(characterObj.characterName.toUpperCase() + " has WON! Press restart to play again.");
+	};
+	this.loseGame = function(characterObj){
+
+		console.log(characterObj.characterName + " has lost the game!");
+		this.updateHeaderText("Sorry, " + characterObj.characterName.toUpperCase() + " has LOST! Press restart to play again");
+	}
+	this.nextEnemy = function (defender){
+
+		this.emptyCharacterContainer("defender");
+		delete this.characterMap[defender.characterName];
+		this.enemySelected = false;
+		this.updateHeaderText("Click to choose a new enemy!");
 
 	};
+
+	this.fight = function(attacker,defender){
+		if(attacker.currentHealthPoints> 0 && defender.currentHealthPoints > 0){
+			attacker.attack(defender);
+		}
+		else{
+			console.log("one of the characters is dead lol...");
+		}
+		
+
+	};
+	this.checkWinner = function(attacker,defender){
+
+		if(attacker.currentHealthPoints <= 0 && defender.currentHealthPoints <= 0){ //attacker and defender dead is a Tie
+			attacker.isDead = true;
+			defender.isDead = true;
+		} 
+		else if(attacker.currentHealthPoints <= 0){ //attacker dead is a game lost
+			attacker.isDead = true;
+			this.loseGame(attacker);
+		}	
+		else if(defender.currentHealthPoints <= 0){ //defender dead is choose next enemy
+
+			defender.isDead = true;
+			//we already check if attacker health is > 0 in our outter if-statement so no need to do it again
+			console.log(Object.keys(this.characterMap).length);
+			if(Object.keys(this.characterMap).length > 1 ){
+				this.nextEnemy(defender);
+				console.log(Object.keys(this.characterMap).length);
+			}
+
+			 if(Object.keys(this.characterMap).length === 1 ){
+				this.winGame(attacker);
+			} 
+			
+		}
+		
+
+	}
 	//used to start and or reset the game
 	this.initialize = function(){
 
@@ -73,8 +137,8 @@ const Game = function(){
 	const jarjar = new Character("jarjar", 90,5,40);
 	const vader = new Character("vader", 150,20,10);
 	const mace = new Character("mace",200, 40, 30);
-	const characterList = [luke, jarjar,vader,mace];
-
+	//const characterList = [luke, jarjar,vader,mace];
+	const characterList = [luke,mace];
 	this.playerSelected = false;
 	this.enemySelected = false;
 	this.playerCharacterName = "NONE";
@@ -84,6 +148,7 @@ const Game = function(){
 	this.mapCharacterContainers(); //add the characterContainer elements e.g. $(".classname") to object for easy lookup
 	this.emptyCharacterContainers(); //empty the characterContainers of children
 	this.regeneratePoolElements(characterList, "neutral");//add avatars to the character pool/selection container
+	this.updateHeaderText("Select your character");
 	};
 //-----------------------------------------------------------------------
 //When constructor is called, initialize the object's values
@@ -170,14 +235,18 @@ $( document ).ready(function(){
 
 
 	$(document).on('click', '.character-avatar.img-fluid', function(){
+		
 		const clickValue = $(this).attr("value");
+
 		if(!newGame.playerSelected){		
 			newGame.setPlayerName(clickValue);
 			newGame.updateCharacterPoolElement(newGame.getPlayerName(), "attacker");
+			newGame.updateHeaderText("Select your enemy!");
 		}
-		else if(!newGame.enemySelected){		
+		else if(!newGame.enemySelected && clickValue !== newGame.getPlayerName()){		
 			newGame.setEnemyName(clickValue);
 			newGame.updateCharacterPoolElement(newGame.getEnemyName(), "defender");
+			newGame.updateHeaderText("Click FIGHT!");
 		}
 
 	});
@@ -185,11 +254,17 @@ $( document ).ready(function(){
 	$(document).on('click', '.btn.btn-default', function(){
 	
 		const clickValue = $(this).attr("value");
+
 		if(newGame.playerSelected && newGame.enemySelected && clickValue === "attack"){
-		
-			newGame.fight(newGame.characterMap[newGame.playerCharacterName], newGame.characterMap[newGame.enemyName]);	
-			console.log("Player: " + newGame.characterMap[newGame.playerCharacterName].currentHealthPoints)
-			console.log("Enemy: " + newGame.characterMap[newGame.enemyName].currentHealthPoints);	
+			
+			const attacker = newGame.characterMap[newGame.playerCharacterName];
+			const defender = newGame.characterMap[newGame.enemyName];
+
+			newGame.fight(attacker, defender);	
+			newGame.checkWinner(attacker,defender);
+
+			console.log("Player: " + attacker.currentHealthPoints)
+			console.log("Enemy: " + defender.currentHealthPoints);	
 		}
 		else if (clickValue === "restart"){
 			newGame.initialize();							
