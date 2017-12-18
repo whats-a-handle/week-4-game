@@ -27,8 +27,8 @@ label{
 
 
 .main-content{
-	margin-top:75px;
-
+	margin-top:30px;
+	
 	
 
 }
@@ -78,6 +78,7 @@ padding: 15px;
 	position:fixed;
 	bottom:0;
 	text-align:center;
+
 	height:40px;
 	width:100%;
 	padding-bottom:60px;
@@ -90,8 +91,8 @@ padding: 15px;
 
 .character-avatar{
 	
-	width:200px;
-	height:150px;
+	width:150px;
+	height:100px;
 	padding: 5px;
 	
 }
