@@ -4,9 +4,15 @@ const Game = function(){
 	this.updateHeaderText = function(textValue){
 
 		$(".page-header.text-center>h1").text(textValue);
-
-
 	};
+
+	this.updateCharacterCaption = function (characterObj, pool){
+
+
+		$(this.characterContainerElements[pool]).empty();
+		characterObj.avatarAttributesElement = $("<div class=\"caption\">" + characterObj.characterName.toUpperCase() +
+												 " | HP: " + characterObj.currentHealthPoints +" | AP: " + characterObj.currentAttackPower+ "</div>");
+	}
 	
 	this.mapCharacterContainers = function(){
 		this.characterContainerElements = {
@@ -44,9 +50,10 @@ const Game = function(){
 		}
 	};
 
-	this.updateCharacterPoolElement = function(characterName,pool){
-
-			this.characterContainerElements[pool].append(this.characterMap[characterName].avatarElement);		
+	this.updateCharacterPoolElement = function(characterObj,pool){
+					
+			this.characterContainerElements[pool].append(characterObj.avatarElement);
+			this.characterContainerElements[pool].append(characterObj.avatarAttributesElement);		
 	};
 
 	this.emptyCharacterContainer = function(container){
@@ -69,6 +76,7 @@ const Game = function(){
 		for(let i = 0; i < avatarList.length; i++){
 
 			this.characterContainerElements[pool].append(avatarList[i].avatarElement);
+			this.characterContainerElements[pool].append(avatarList[i].avatarAttributesElement);
 		}
 
 	}
@@ -163,17 +171,20 @@ const Character = function(characterName,baseHealthPoints,baseAttackPower,
 		this.characterName = characterName;
 		this.baseHealthPoints = baseHealthPoints 
 		this.currentHealthPoints = baseHealthPoints;
-		this.avatar = "./assets/images/"+ characterName + ".jpg";
-		this.classes = [ "img-fluid","character-avatar"];
-		//Create an image element with the avatars photo, styling and assign the characterName as the value to be returned
-		this.avatarElement = $("<img src=" + this.avatar + " class=\"" + this.classes.join(" ") + "\" " 
-								+"value=\"" + characterName + "\"" +  "alt=\"Responsive image\">");
 		this.baseAttackPower = baseAttackPower;
 		this.currentAttackPower = baseAttackPower;
 		this.counterAttackPower = counterAttackPower;
 		this.isAttacker = false;
 		this.isDead = false;
+		this.avatar = "./assets/images/"+ characterName + ".jpg";
+		this.classes = [ "img-fluid","character-avatar"];
+		//Create an image element with the avatars photo, styling and assign the characterName as the value to be returned
 
+		this.avatarElement = $("<img src=" + this.avatar + " class=\"" + this.classes.join(" ") + "\" " 
+								+"value=\"" + characterName + "\"" +  "alt=\"Responsive image\">");
+		//Create a caption with the attributes of our avatar
+		this.avatarAttributesElement = $("<div class=\"caption\">" + this.characterName.toUpperCase() +
+												 " | HP: " + this.currentHealthPoints +" | AP: " + this.currentAttackPower+ "</div>");
 		//---------------------CHARACTER FUNCTIONS---------------------------------------------------
 		//attack and pass in defender object 
 		//inner functions pass in references rather than value
@@ -181,6 +192,8 @@ const Character = function(characterName,baseHealthPoints,baseAttackPower,
 		//defender defends (damage calculation)
 		//defender counterAttacks 
 		//counterAttack is passed the Attacker object and the Attacker calls the defend function
+
+
 		this.attack = function(defendingCharacter){
 
 			this.isAttacker = true;
@@ -214,7 +227,7 @@ const Character = function(characterName,baseHealthPoints,baseAttackPower,
 
 
 			console.log(this.characterName + " takes " + attackDamage + " points of damage from a "  + attackType);
-			
+
 			if(this.currentHealthPoints <= 0){
 				this.isDead = true;
 				console.log(this.characterName + " has DIED");
@@ -243,14 +256,16 @@ $( document ).ready(function(){
 
 		const clickValue = $(this).attr("value");
 
-		if(!newGame.playerSelected){		
+		if(!newGame.playerSelected){	
+			const attacker = newGame.characterMap[clickValue];	
 			newGame.setPlayerName(clickValue);
-			newGame.updateCharacterPoolElement(newGame.getPlayerName(), "attacker");
+			newGame.updateCharacterPoolElement(attacker, "attacker");
 			newGame.updateHeaderText("Select your enemy!");
 		}
-		else if(!newGame.enemySelected && clickValue !== newGame.getPlayerName()){		
+		else if(!newGame.enemySelected && clickValue !== newGame.getPlayerName()){	
+			const defender = newGame.characterMap[clickValue];	
 			newGame.setEnemyName(clickValue);
-			newGame.updateCharacterPoolElement(newGame.getEnemyName(), "defender");
+			newGame.updateCharacterPoolElement(defender, "defender");
 			newGame.updateHeaderText("Click FIGHT!");
 		}
 
@@ -266,6 +281,13 @@ $( document ).ready(function(){
 			const defender = newGame.characterMap[newGame.enemyName];
 
 			newGame.fight(attacker, defender);	
+
+			newGame.updateCharacterCaption(attacker,"attacker");
+			newGame.updateCharacterCaption(defender,"defender");
+
+			newGame.updateCharacterPoolElement(attacker,"attacker");
+			newGame.updateCharacterPoolElement(defender,"defender");
+
 			newGame.checkWinner(attacker,defender);
 
 			console.log("Player: " + attacker.currentHealthPoints)
@@ -277,12 +299,5 @@ $( document ).ready(function(){
 
 	
 	});
-
-	
-	
-
-	
-	
-	
 
 });
