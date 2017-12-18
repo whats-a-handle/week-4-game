@@ -65,7 +65,7 @@ const Game = function(){
 
 	}
 	//empties all containres for initialization
-	this.emptyCharacterContainers = function(){
+	this.emptyAllCharacterContainers = function(){
 
 		
 		for(key in this.characterContainerElements){
@@ -162,7 +162,7 @@ const Game = function(){
 	this.characterMap = {}; //empty characterMap
 	this.addCharacters(characterList);//adds default characters to map
 	this.mapCharacterContainers(); //add the characterContainer elements e.g. $(".classname") to object for easy lookup
-	this.emptyCharacterContainers(); //empty the characterContainers of children
+	this.emptyAllCharacterContainers(); //empty the characterContainers of children
 	this.regeneratePoolElements(characterList, "neutral");//add avatars to the character pool/selection container
 	this.updateHeaderText("Select your character");
 	};
