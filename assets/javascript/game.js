@@ -149,10 +149,10 @@ const Game = function(){
 	//used to start and or reset the game
 	this.initialize = function(){
 
-	const luke = new Character("luke",100,10,25);
-	const jarjar = new Character("jarjar", 90,5,40);
+	const luke = new Character("luke",120,8,25);
+	const jarjar = new Character("jarjar", 100,15,5);
 	const vader = new Character("vader", 150,20,10);
-	const mace = new Character("mace",200, 40, 30);
+	const mace = new Character("mace",175, 40, 30);
 	const characterList = [luke, jarjar,vader,mace];
 
 	this.playerSelected = false;
@@ -203,7 +203,10 @@ const Character = function(characterName,baseHealthPoints,baseAttackPower,
 		//defender counterAttacks 
 		//counterAttack is passed the Attacker object and the Attacker calls the defend function
 
+		this.increaseAttackPower = function(){
 
+			this.currentAttackPower += this.baseAttackPower;
+		}
 		this.attack = function(defendingCharacter){
 
 			this.isAttacker = true;
@@ -211,6 +214,8 @@ const Character = function(characterName,baseHealthPoints,baseAttackPower,
 			defendingCharacter.defend(this); //enemy defends - takes damage
 			defendingCharacter.counterAttack(this); //enemy counter attacks 
 			this.isAttacker = false;
+			this.increaseAttackPower();
+
 
 
 		};
