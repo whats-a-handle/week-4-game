@@ -11,9 +11,17 @@ const Game = function(){
 	this.updateCharacterCaption = function (characterObj, pool){
 
 		$(this.characterContainerElements[pool]).empty();
+		if(characterObj.characterName === this.playerCharacterName){
+			
 		characterObj.avatarAttributesElement = $("<div class=\"caption\">" + characterObj.characterName.toUpperCase() +
-												 " | HP: " + characterObj.currentHealthPoints +" | AP: " + characterObj.currentAttackPower+
-												 " | cAP: " + characterObj.counterAttackPower + "</div>");
+												 " | HP: " + characterObj.currentHealthPoints + " | AP: " + characterObj.currentAttackPower +"</div>");
+
+		}
+		else{
+
+		characterObj.avatarAttributesElement = $("<div class=\"caption\">" + characterObj.characterName.toUpperCase() +
+												 " | HP: " + characterObj.currentHealthPoints + " | AP: " + characterObj.counterAttackPower + "</div>");
+		}
 	}
 	//easy way to lookup character containers/zones by passing a string
 	this.mapCharacterContainers = function(){
@@ -193,8 +201,7 @@ const Character = function(characterName,baseHealthPoints,baseAttackPower,
 								+"value=\"" + characterName + "\"" +  "alt=\"Responsive image\">");
 		//Create a caption with the attributes of our avatar
 		this.avatarAttributesElement = $("<div class=\"caption\">" + this.characterName.toUpperCase() +
-												 " | HP: " + this.currentHealthPoints +" | AP: " + this.currentAttackPower+
-												 " | cAP: " + this.counterAttackPower + "</div>");
+												 " | HP: " + this.currentHealthPoints + "</div>");
 		//---------------------CHARACTER FUNCTIONS---------------------------------------------------
 		//attack and pass in defender object 
 		//inner functions pass in references rather than value
@@ -284,7 +291,7 @@ $( document ).ready(function(){
 			const defender = newGame.characterMap[clickValue];	
 			newGame.setEnemyName(clickValue);
 			newGame.updateCharacterPoolElement(defender, "defender");
-			newGame.updateHeaderText("Click FIGHT!");
+			newGame.updateHeaderText("Click the attack button!");
 		}
 
 	});
