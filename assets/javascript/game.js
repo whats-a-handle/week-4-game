@@ -104,15 +104,14 @@ const Game = function(){
 	};
 	this.checkWinner = function(attacker,defender){
 
-		if(attacker.currentHealthPoints <= 0 && defender.currentHealthPoints <= 0){ //attacker and defender dead is a Tie
+		if(attacker.isDead  && defender.isDead){ //attacker and defender dead is a Tie
 			attacker.isDead = true;
 			defender.isDead = true;
 		} 
-		else if(attacker.currentHealthPoints <= 0){ //attacker dead is a game lost
-			attacker.isDead = true;
+		else if(attacker.isDead){ //attacker dead is a game lost
 			this.loseGame(attacker);
 		}	
-		else if(defender.currentHealthPoints <= 0){ //defender dead is choose next enemy
+		else if(defender.isDead){ //defender dead is choose next enemy
 
 			defender.isDead = true;
 			//we already check if attacker health is > 0 in our outter if-statement so no need to do it again
@@ -212,8 +211,14 @@ const Character = function(characterName,baseHealthPoints,baseAttackPower,
 				attackType = " normal attack "
 			}
 			
+
+
 			console.log(this.characterName + " takes " + attackDamage + " points of damage from a "  + attackType);
 			
+			if(this.currentHealthPoints <= 0){
+				this.isDead = true;
+				console.log(this.characterName + " has DIED");
+			}
 
 		};
 		//Attack the original attacker (character who called the "attack" function)
@@ -221,7 +226,7 @@ const Character = function(characterName,baseHealthPoints,baseAttackPower,
 		this.counterAttack = function(attackingCharacter){
 
 			attackingCharacter.defend(this);
-			console.log(this.characterName + " counter-attacks for " + this.counterAttackPower + " points of damage");
+			
 
 		};
 	};
@@ -235,7 +240,7 @@ $( document ).ready(function(){
 
 
 	$(document).on('click', '.character-avatar.img-fluid', function(){
-		
+
 		const clickValue = $(this).attr("value");
 
 		if(!newGame.playerSelected){		
